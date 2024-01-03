@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+<head>
+<title>Cross-Browser QRCode generator for Javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body>
+<button id="get" onclick="get()">获取</button>
+<canvas id="canvas"></canvas>
+<!-- 有对 promise的依赖，如不考虑兼容，可尝试删除该依赖 -->
+<script src="//www.promisejs.org/polyfills/promise-6.1.0.js"></script>
+<!-- 将上方下载的文件放置于js文件夹下 -->
+<script src="qr-code-with-logo.browser.min.js"></script>
+<script>
+    function get() {
+        var token;
+        $.get("http://116.62.211.213/prea", function(data, status){
+            token = data;
+            if(token == undefined || token == '') {
+                alert("失败")
+                return;
+            }
+            nextUrl = location.href.replace("qrcode","index")
+            QrCodeWithLogo.toCanvas({
+                canvas: document.getElementById('canvas'),
+                //content: 'https://seanxindai.github.io/seanxindai/index.html?t=' + token,
+                content: nextUrl + "?x=1&t=" + token,
+                width: 380,
+                logo: {
+                    src: 'logo.png',
+                }
+            })
+        });
+    }
+</script>
+</body>

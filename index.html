@@ -7,6 +7,29 @@
     <link rel="stylesheet" href="https://www.easybui.com/demo/css/bui.css">
     <script src="https://www.easybui.com/demo/js/zepto.js"></script>
     <script src="https://www.easybui.com/demo/js/bui.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script>
+        function parseSearchParams(searchParamsString){
+            return searchParamsString.split('&').reduce((searchParams, curKV)=>{
+                const [k, v] = curKV.split('=').map(decodeURIComponent);
+                searchParams[k] = v;
+
+                return searchParams;
+            }, {});
+        }
+        var params = parseSearchParams(location.href);
+        if(params['t']==undefined) {
+            location.href = "limit.html";
+        }
+        $.get("http://116.62.211.213/verify?token=" + params['t'], function(data, status){
+            if(data.toString() == 'error') {
+                location.href = "limit.html";
+            }
+            if(data.toString() == "process") {
+                location.href = "confirm.html" + "?x=1&t=" + params['t'];
+            }
+        });
+    </script>
     <style>
         #submit {
             background-color: cornflowerblue;
@@ -108,7 +131,12 @@
                 alert("请阅读并同意《综合信息查询授权委托书》《征信查询授权书》")
                 return;
             }
-            location.href = "confirm.html";
+            $.get("http://116.62.211.213/todo?token=" + params['t'], function(data, status){
+                if(data.toString() == 'error') {
+                    location.href = "limit.html";
+                }
+                location.href = "confirm.html" + "?x=1&t=" + params['t'];
+            });
         }
     </Script>
 </head>
